@@ -12,7 +12,7 @@ import os
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY','your_secret_key')
+app.secret_key = os.getenv('KEY')
 
 CORS(app)
 
@@ -23,7 +23,7 @@ class main():
     def add_books():
         return InsertBookStock()
 
-    @app.route('/api/books',methods = ['GET'])
+    @app.route('/api/getbooks',methods = ['GET'])
     def show_books():
         return ShowBooks()
 
@@ -35,15 +35,36 @@ class main():
     def delete_books(isbn):
         return DeleteBooks(isbn)
 
-   
+    @app.route('/api/details_book/<isbn>',methods = ['GET'])
+    def detail_books(isbn):
+        return DetailBooks(isbn)
+
+    @app.route('/api/details_book_return/<isbn>',methods=['GET'])
+    def detail_books_return(isbn):
+        return DetailBooksReturn(isbn)
+
+
+    @app.route('/api/showbooks_byid/<isbn>',methods= ['GET'])
+    def get_books_id(isbn):
+        return BoosByISBN(isbn)
+    
+
     #Borrow Books
     @app.route('/api/borrow',methods = ['POST'])
     def create_borrow():
         return CreatePeminjaman()
     
-    @app.route('/api/list_borrow',methods=['GET'])
-    def show_detailborrow():
-        return ShowDetailPeminjaman()
+    @app.route('/api/list_borrow_users/<idborrow>',methods=['GET'])
+    def show_detailborrow_users(idborrow):
+        return ShowDetailPeminjamanUsers(idborrow)
+    
+    @app.route('/api/list_borrow_return/<idborrow>',methods = ['GET'])
+    def show_detailborrow_return(idborrow):
+        return ShowDetailPeminjamanReturn(idborrow)
+
+    @app.route('/api/list_borrow/<idborrow>',methods = ['GET'])
+    def show_borrows_byid(idborrow):
+        return ShowPeminjamanById(idborrow)
     
     @app.route('/api/is_borrow',methods = ['GET'])
     def show_isborrow():
@@ -58,13 +79,13 @@ class main():
         return UpdateDueDate(idborrow)
 
     #Borrow Books & Return Member
-    @app.route('/api/list_borrow_member',methods = ['GET'])
-    def show_borrowMember():
-        return ShowBorrowooksByMember()
+    @app.route('/api/list_borrow_member/<userid>',methods = ['GET'])
+    def show_borrowMember(userid):
+        return ShowBorrowooksByMember(userid)
     
-    @app.route('/api/list_return_member',methods = ['GET'])
-    def show_returnMember():
-        return ShowReturnBooksMember()
+    @app.route('/api/list_return_member/<userid>',methods = ['GET'])
+    def show_returnMember(userid):
+        return ShowReturnBooksMember(userid)
 
 
     #Return Books
@@ -94,9 +115,13 @@ class main():
     def logout():
         return Logout()
     
-    @app.route('/api/staff_logged',methods = ['GET'])
-    def detail_staff():
-        return ShowUserByStaff()
+    @app.route('/api/staff_basic/<id>',methods = ['GET'])
+    def basic_staff(id):
+        return ShowBasicInfoStaff(id)
+
+    @app.route('/api/staff_logged/<iduser>',methods = ['GET'])
+    def detail_staff(iduser):
+        return ShowUserByStaff(iduser)
 
     @app.route('/api/sadmin_logged',methods = ['GET'])
     def detail_sadmin():
@@ -109,6 +134,10 @@ class main():
     @app.route('/api/update_detailuser',methods = ['POST'])
     def update_detailuser():
         return UpdateDetailInformation()
+    
+    @app.route('/api/show_members',methods = ['GET'])
+    def show_members():
+        return ShowAllMember()
 
     if __name__ =="__main__":
         app.run(host='0.0.0.0',debug = True,port = 8181) 

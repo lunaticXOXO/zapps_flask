@@ -1,0 +1,63 @@
+{
+  "name": "ui-inka",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@vuelidate/core": "^2.0.0-alpha.41",
+    "@vuelidate/validators": "^2.0.0-alpha.29",
+    "apexcharts": "^3.35.5",
+    "axios": "^0.27.2",
+    "core-js": "^3.8.3",
+    "moment": "^2.29.4",
+    "vee-validate": "^4.5.11",
+    "vue": "^2.6.14",
+    "vue-apexcharts": "^1.6.2",
+    "vue-axios": "^3.4.1",
+    "vue-bar-graph": "^2.0.0",
+    "vue-ganttastic": "^0.9.34",
+    "vue-head": "^2.2.0",
+    "vue-router": "^3.5.1",
+    "vuetify": "^2.6.0",
+    "vuetify-datetime-picker": "^2.1.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.16",
+    "@babel/eslint-parser": "^7.12.16",
+    "@babel/parser": "^7.23.6",
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-eslint": "~5.0.0",
+    "@vue/cli-plugin-router": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-vue": "^8.0.3",
+    "sass": "~1.32.0",
+    "sass-loader": "^10.0.0",
+    "vue-cli-plugin-vuetify": "~2.5.1",
+    "vue-template-compiler": "^2.6.14",
+    "vuetify-loader": "^1.7.0"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "@babel/eslint-parser"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

@@ -32,3 +32,15 @@ def QueryUpdateQuantityBooks(quantity,isbn):
 def QueryGetPriceBooks(isbn):
   query = "SELECT price FROM book_stock WHERE isbn = '"+isbn+"'"
   return query
+
+def QueryDetailBooks(isbn):
+  query = "SELECT * FROM book_stock JOIN book_borrow ON book_borrow.nisn_book = book_stock.isbn WHERE book_stock.isbn = '"+isbn+"'"
+  return query
+
+def QueryDetailBooksReturn(isbn):
+  query = "SELECT * FROM book_stock JOIN book_return ON book_return.nisn_book = book_stock.isbn WHERE book_stock.isbn = '"+isbn+"'"
+  return query
+
+def QueryGetBooksById(isbn):
+  query = "SELECT * FROM book_Stock WHERE book_stock.isbn = '"+isbn+"'"
+  return query

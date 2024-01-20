@@ -15,27 +15,25 @@ def InsertBookStock():
     cursor = conn.cursor()
     query = books_repo.QueryAddBooks()
     try:
-        if session['loggedin'] == True and (session['usertype'] == 1 or session['usertype'] == 2):
-            data = request.json
+       
+        data = request.json
 
-            isbn = data["isbn"]
-            bookname = data["bookname"]
-            author = data["author"]
-            penerbit = data["penerbit"]
-            category = data["category"]
-            quantity = data["quantity"]
-            price = data["price"]
+        isbn = data["isbn"]
+        bookname = data["bookname"]
+        author = data["author"]
+        penerbit = data["penerbit"]
+        category = data["category"]
+        quantity = data["quantity"]
+        price = data["price"]
 
-            values = (isbn,bookname,
+        values = (isbn,bookname,
                     author,penerbit,
                     category,quantity,
                     price)
             
-            cursor.execute(query, values)
-            conn.commit()
-        elif session['loggedin'] == False:
-            output = {"status" : "unauthorized"}
-    
+        cursor.execute(query, values)
+        conn.commit()
+      
         cursor.close()
         conn.close()
 
@@ -52,28 +50,24 @@ def UpdateBooks(isbn):
     cursor = conn.cursor()
     query = books_repo.QueryUpdateBooks()
     try:
+        data = request.json
 
-        if session['loggedin'] == True and (session['usertype'] == 1 or session['usertype'] == 2):
-            data = request.json
+        isbn = data["isbn"]
+        bookname = data["bookname"]
+        author = data["author"]
+        penerbit = data["penerbit"]
+        category = data["category"]
+        quantity = data["quantity"]
+        price = data["price"]
 
-            isbn = data["isbn"]
-            bookname = data["bookname"]
-            author = data["author"]
-            penerbit = data["penerbit"]
-            category = data["category"]
-            quantity = data["quantity"]
-            price = data["price"]
-
-            values = (isbn,bookname,
+        values = (isbn,bookname,
                     author,penerbit,
                     category,quantity,
                     price,isbn)
             
-            cursor.execute(query,values)
-            conn.commit()
-        elif session['loggedin'] == False:
-            output = {"status" : "unauthorized"}
-
+        cursor.execute(query,values)
+        conn.commit()
+       
         cursor.close()
         conn.close()
         output = {"status" : "success"}
@@ -89,21 +83,20 @@ def ShowBooks():
     cursor = conn.cursor()
 
     try:
-        if session['loggedin'] == True and (session['usertype'] == 1 or session['usertype'] == 2 or session['usertype'] == 3 ):
+    
+        query = books_repo.QueryShowBook()
+        cursor.execute(query)
+        records = cursor.fetchall()
 
-            query = books_repo.QueryShowBook()
-            cursor.execute(query)
-            records = cursor.fetchall()
+        row_headers = [x[0] for x in cursor.description]
+        json_data = []
 
-            row_headers = [x[0] for x in cursor.description]
-            json_data = []
-
-            for data in records:
-                json_data.append(dict(zip(row_headers,data)))
+        for data in records:
+            json_data.append(dict(zip(row_headers,data)))
             
-            cursor.close()
-            conn.close()
-            return make_response(jsonify(json_data),200)
+        cursor.close()
+        conn.close()
+        return make_response(jsonify(json_data),200)
         
     except Exception as e:
         print("error",str(e))
@@ -117,11 +110,10 @@ def DeleteBooks(isbn):
     cursor = conn.cursor()
    
     try:
-        if session['loggedin'] == True and (session['usertype'] == 1 or session['usertype'] == 2):
-            query = books_repo.QueryDeleteBooks(isbn)
-            cursor.execute(query)
-            conn.commit()
-            output = {"status" : "success"}
+        query = books_repo.QueryDeleteBooks(isbn)
+        cursor.execute(query)
+        conn.commit()
+        output = {"status" : "success"}
 
     except Exception as e:
         output = {"status" : "failed"}
@@ -132,4 +124,73 @@ def DeleteBooks(isbn):
 
     return output
 
+
+def DetailBooks(isbn):
+    conn = database.connector()
+    cursor = conn.cursor()
+
+    try:
+        query = books_repo.QueryDetailBooks(isbn)
+        cursor.execute(query)
+        records = cursor.fetchall()
+
+        row_headers = [x[0] for x in cursor.description]
+        json_data = []
+
+        for data in records:
+            json_data.append(dict(zip(row_headers,data)))
+            
+        cursor.close()
+        conn.close()
+        return make_response(jsonify(json_data),200)
+        
+    except Exception as e:
+        print("error",str(e))
+        return {"status" : "failed"}
     
+
+def DetailBooksReturn(isbn):
+    conn = database.connector()
+    cursor = conn.cursor()
+
+    try:
+        query = books_repo.QueryDetailBooksReturn(isbn)
+        cursor.execute(query)
+        records = cursor.fetchall()
+
+        row_headers = [x[0] for x in cursor.description]
+        json_data = []
+
+        for data in records:
+            json_data.append(dict(zip(row_headers,data)))
+            
+        cursor.close()
+        conn.close()
+        return make_response(jsonify(json_data),200)
+        
+    except Exception as e:
+        print("error",str(e))
+        return {"status" : "failed"}
+
+def BoosByISBN(isbn):
+    conn = database.connector()
+    cursor = conn.cursor()
+
+    try:
+        query = books_repo.QueryGetBooksById(isbn)
+        cursor.execute(query)
+        records = cursor.fetchall()
+
+        row_headers = [x[0] for x in cursor.description]
+        json_data = []
+
+        for data in records:
+            json_data.append(dict(zip(row_headers,data)))
+            
+        cursor.close()
+        conn.close()
+        return make_response(jsonify(json_data),200)
+        
+    except Exception as e:
+        print("error",str(e))
+        return {"status" : "failed"}

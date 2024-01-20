@@ -18,50 +18,49 @@ def CreatePeminjaman():
     cursor = conn.cursor()
    
     try:
-         if session['loggedin'] == True and (session['usertype'] == 1 or session['usertype'] == 2):
-            query = borrow_repo.QueryCreatePeminjaman()
-            data = request.json
-            idborrow = data["idborrow"]
-            nama_peminjam = data["nama_peminjam"]
-            tanggal_pinjam = datetime.now()
+        query = borrow_repo.QueryCreatePeminjaman()
+        data = request.json
+        idborrow = data["idborrow"]
+        nama_peminjam = data["nama_peminjam"]
+        tanggal_pinjam = datetime.now()
 
-            tanggal = tanggal_pinjam.date()
-            print("tanggal pinjam : ", tanggal)
+        tanggal = tanggal_pinjam.date()
+        print("tanggal pinjam : ", tanggal)
 
-            deadline_pinjam = data["deadline_pinjam"]
-            quantity_pinjam = data["quantity"]
-            isBorrow = 1
-            nisn_book = data["book_stock"]
-            userid = data["users"]
+        deadline_pinjam = data["deadline_pinjam"]
+        quantity_pinjam = data["quantity"]
+        quantity_pinjam = int(quantity_pinjam)
+        isBorrow = 1
+        nisn_book = data["book_stock"]
+        userid = data["users"]
 
-            values = (idborrow,
-                      nama_peminjam,
-                      str(tanggal),
-                      deadline_pinjam,
-                      quantity_pinjam,
-                      isBorrow,
-                      nisn_book,
-                      userid)
-            
-            cursor.execute(query,values)
-          
-            query_getqty = book_repo.QueryGetQuantityBooks(nisn_book)
-            cursor.execute(query_getqty)
-            selected = cursor.fetchone()
-
-            quantity_books = selected[0]
+        values = (idborrow,
+                nama_peminjam,
+                str(tanggal),
+                deadline_pinjam,
+                quantity_pinjam,
+                str(isBorrow),
+                nisn_book,
+                userid)
+        
+        print("values : ",values)
+        cursor.execute(query,values)
+    
+        query_getqty = book_repo.QueryGetQuantityBooks(nisn_book)
+        cursor.execute(query_getqty)
+        selected = cursor.fetchone()
+        quantity_books = selected[0]
            
-            quantity_now = quantity_books - quantity_pinjam
-            quantity_now = str(quantity_now)
+        quantity_now = quantity_books - quantity_pinjam
+        quantity_now = str(quantity_now)
 
-            query_updateqty = book_repo.QueryUpdateQuantityBooks(quantity_now,nisn_book)
-            cursor.execute(query_updateqty)
+        query_updateqty = book_repo.QueryUpdateQuantityBooks(quantity_now,nisn_book)
+        cursor.execute(query_updateqty)
 
-            conn.commit()
-            cursor.close()
-            conn.close()
-
-            hasil = {"status" : "success"}
+        conn.commit()
+        cursor.close()
+        conn.close()
+        hasil = {"status" : "success"}
         
     except Exception as e:
         hasil = {"status" : "failed"}
@@ -70,49 +69,95 @@ def CreatePeminjaman():
     return hasil
 
 
-def ShowDetailPeminjaman():
+def ShowDetailPeminjamanUsers(idborrow):
     conn = database.connector()
     cursor = conn.cursor()
 
     try:
-        if session['loggedin'] == True and (session['usertype'] == 1 or session['usertype'] == 2):
-            query = borrow_repo.QueryShowDetailPeminjaman()
-            cursor.execute(query)
-            records = cursor.fetchall()
+        query = borrow_repo.QueryShowDetailPeminjamanUsers(idborrow)
+        cursor.execute(query)
+        records = cursor.fetchall()
 
-            row_headers = [x[0] for x in cursor.description]
-            json_data = []
+        row_headers = [x[0] for x in cursor.description]
+        json_data = []
 
-            for data in records:
-                json_data.append(dict(zip(row_headers,data)))
+        for data in records:
+            json_data.append(dict(zip(row_headers,data)))
             
-            cursor.close()
-            conn.close()
-            return make_response(jsonify(json_data),200)
+        cursor.close()
+        conn.close()
+        return make_response(jsonify(json_data),200)
 
     except Exception as e:
         print("error",str(e))
         return {"status" : "failed"}
+
+def ShowDetailPeminjamanReturn(idborrow):
+    conn = database.connector()
+    cursor = conn.cursor()
+
+    try:
+        query = borrow_repo.QueryShowDetailPeminjamanReturn(idborrow)
+        cursor.execute(query)
+        records = cursor.fetchall()
+
+        row_headers = [x[0] for x in cursor.description]
+        json_data = []
+
+        for data in records:
+            json_data.append(dict(zip(row_headers,data)))
+            
+        cursor.close()
+        conn.close()
+        return make_response(jsonify(json_data),200)
+
+    except Exception as e:
+        print("error",str(e))
+        return {"status" : "failed"}
+
+
+def ShowPeminjamanById(idborrow):
+    conn = database.connector()
+    cursor = conn.cursor()
+
+    try:
+        query = borrow_repo.QueryShowPeminjamanById(idborrow)
+        cursor.execute(query)
+        records = cursor.fetchall()
+
+        row_headers = [x[0] for x in cursor.description]
+        json_data = []
+
+        for data in records:
+            json_data.append(dict(zip(row_headers,data)))
+            
+        cursor.close()
+        conn.close()
+        return make_response(jsonify(json_data),200)
+
+    except Exception as e:
+        print("error",str(e))
+        return {"status" : "failed"}
+
 
 def ShowIsPinjamBooks():
     conn = database.connector()
     cursor = conn.cursor()
 
     try:
-        if session['loggedin'] == True and (session['usertype'] == 1 or session['usertype'] == 2):
-            query = borrow_repo.QueryShowBukuIsPinjam()
-            cursor.execute(query)
-            records = cursor.fetchall()
+        query = borrow_repo.QueryShowBukuIsPinjam()
+        cursor.execute(query)
+        records = cursor.fetchall()
 
-            row_headers = [x[0] for x in cursor.description]
-            json_data = []
+        row_headers = [x[0] for x in cursor.description]
+        json_data = []
 
-            for data in records:
-                json_data.append(dict(zip(row_headers,data)))
+        for data in records:
+            json_data.append(dict(zip(row_headers,data)))
             
-            cursor.close()
-            conn.close()
-            return make_response(jsonify(json_data),200)
+        cursor.close()
+        conn.close()
+        return make_response(jsonify(json_data),200)
 
     except Exception as e:
         print("error",str(e))
@@ -124,20 +169,20 @@ def ShowIsReturn():
     cursor = conn.cursor()
 
     try:
-        if session['loggedin'] == True and (session['usertype'] == 1 or session['usertype'] == 2):
-            query = borrow_repo.QueryShowBukuReturn()
-            cursor.execute(query)
-            records = cursor.fetchall()
+       
+        query = borrow_repo.QueryShowBukuReturn()
+        cursor.execute(query)
+        records = cursor.fetchall()
 
-            row_headers = [x[0] for x in cursor.description]
-            json_data = []
+        row_headers = [x[0] for x in cursor.description]
+        json_data = []
 
-            for data in records:
-                json_data.append(dict(zip(row_headers,data)))
+        for data in records:
+            json_data.append(dict(zip(row_headers,data)))
             
-            cursor.close()
-            conn.close()
-            return make_response(jsonify(json_data),200)
+        cursor.close()
+        conn.close()
+        return make_response(jsonify(json_data),200)
 
     except Exception as e:
         print("error",str(e))
@@ -168,18 +213,15 @@ def UpdateDueDate(idborrow):
 
 
 
-def ShowBorrowooksByMember():
+def ShowBorrowooksByMember(userid):
     conn = database.connector()
     cursor = conn.cursor()
 
     try:
-        if session['loggedin'] == True and session['usertype'] == 3:
-            userid = session['id']
-            userid = str(userid)
-            
+            # userid = session['id']
+            # userid = str(userid)
             query = borrow_repo.QueryShowBorrowBookMember(userid)
-            
-
+          
             values = (userid)
             cursor.execute(query,values)
             records = cursor.fetchall()
@@ -200,30 +242,25 @@ def ShowBorrowooksByMember():
         return {"status" : "failed"}
 
 
-def ShowReturnBooksMember():
+def ShowReturnBooksMember(userid):
     conn = database.connector()
     cursor = conn.cursor()
 
     try:
-        if session['loggedin'] == True and session['usertype'] == 3:
+        query = borrow_repo.QueryShowReturnBookMember(userid)
+        values = (userid)
+        cursor.execute(query,values)
+        records = cursor.fetchall()
+
+        row_headers = [x[0] for x in cursor.description]
+        json_data = []
+
+        for data in records:
+            json_data.append(dict(zip(row_headers,data)))
             
-            userid = session['id']
-            userid = str(userid)
-
-            query = borrow_repo.QueryShowReturnBookMember(userid)
-            values = (userid)
-            cursor.execute(query,values)
-            records = cursor.fetchall()
-
-            row_headers = [x[0] for x in cursor.description]
-            json_data = []
-
-            for data in records:
-                json_data.append(dict(zip(row_headers,data)))
-            
-            cursor.close()
-            conn.close()
-            return make_response(jsonify(json_data),200)
+        cursor.close()
+        conn.close()
+        return make_response(jsonify(json_data),200)
 
     except Exception as e:
         print("error",str(e))

@@ -51,63 +51,65 @@ def CreateReturn():
     conn = database.connector()
     cursor = conn.cursor()
     try:
-        if session['loggedin'] == True and (session['usertype'] == 1 or session['usertype'] == 2):
-            query = return_repo.QueryCreateReturnBook()
-            data = request.json
+        query = return_repo.QueryCreateReturnBook()
+        data = request.json
 
-            idreturn = data["idreturn"]
-            nama_pengembali = data["nama_pengembali"]
-            tanggal_kembali = datetime.now()
-            tanggal = tanggal_kembali.date()
-            isReturn = 1
-            quantity_return = data["quantity"]
-            nisn_book = data["book_stock"]
-            userid = data["users"]
-            borrow = data["borrow"]
+        idreturn = data["idreturn"]
+        nama_pengembali = data["nama_pengembali"]
+        tanggal_kembali = datetime.now()
+        tanggal = tanggal_kembali.date()
+        isReturn = 1
+        quantity_return = data["quantity"]
+        quantity_return = int(quantity_return)
+        nisn_book = data["book_stock"]
+        userid = data["users"]
+        borrow = data["borrow"]
 
-            values = (idreturn,nama_pengembali,
+        values = (idreturn,nama_pengembali,
                     str(tanggal),isReturn,
                     quantity_return,nisn_book,
                     userid,borrow)
-            
-            cursor.execute(query,values)
-            quantity_books = GetQuantityBookStock(nisn_book)
-            qty_bookstock = quantity_books + quantity_return
+       
+        cursor.execute(query,values)
+        quantity_books = GetQuantityBookStock(nisn_book)
+        qty_bookstock = quantity_books + quantity_return
            
-            query_updateQty = book_repo.QueryUpdateQuantityBooks(str(qty_bookstock),nisn_book)
-            cursor.execute(query_updateQty)
-            quantity_borrow = GetQuantityBookBorrow(borrow)
+        query_updateQty = book_repo.QueryUpdateQuantityBooks(str(qty_bookstock),nisn_book)
+        cursor.execute(query_updateQty)
+        quantity_borrow = GetQuantityBookBorrow(borrow)
             
-            qty_borrowNow = 0
-            query_updatePinjam = borrow_repo.QueryUpdateStatusPeminjaman(borrow)
-            qty_borrowNow = quantity_borrow - quantity_return
-            if qty_borrowNow <= 0:
-                values_update = (qty_borrowNow,0)
-            else:
-                values_update = (qty_borrowNow,1)
+        qty_borrowNow = 0
+        query_updatePinjam = borrow_repo.QueryUpdateStatusPeminjaman(borrow)
+        qty_borrowNow = quantity_borrow - quantity_return
 
-            cursor.execute(query_updatePinjam,values_update)
 
-            dateline = GetDeadlineBooks(borrow)
-            range_date = (tanggal - dateline).days
-
-            if tanggal < dateline:
-               cek = False
-            else:
-                query_violation = violation_repo.QueryCreateViolation()
-                biaya = range_date * os.getenv('DENDA_HARI')
-                values_violation = (nama_pengembali,biaya,2,nisn_book,userid)
-                cursor.execute(query_violation,values_violation)
-                cek = True
-
-            conn.commit()
-            if cek == False:
-                output = {"status" : "success", "denda" : "False"}
-            else:
-                output = {"status" : "success", "denda" : "True"}
+        if qty_borrowNow <= 0:
+            values_update = (qty_borrowNow,0)
         else:
-            output = {"status" : "unauthorized"}
+            values_update = (qty_borrowNow,1)
 
+        cursor.execute(query_updatePinjam,values_update)
+
+        dateline = GetDeadlineBooks(borrow)
+        range_date = (tanggal - dateline).days
+
+        output = None
+        if tanggal < dateline:
+            cek = False
+        else:
+            query_violation = violation_repo.QueryCreateViolation()
+            biaya = range_date * os.getenv('DENDA_HARI')
+            values_violation = (nama_pengembali,biaya,2,nisn_book,userid,idreturn)
+            cursor.execute(query_violation,values_violation)
+            cek = True
+            print("test")
+        conn.commit()
+        
+        if cek == False:
+            output = {"status" : "success", "denda" : "False"}
+        else:
+            output = {"status" : "success", "denda" : "True"}
+        
     except Exception as e:
         print("error",str(e))
         output = {"status" : "failed"}
@@ -120,20 +122,20 @@ def ShowBookIsReturn():
     cursor = conn.cursor()
 
     try:
-        if session['loggedin'] == True and (session['usertype'] == 1 or session['usertype'] == 2):
-            query = return_repo.QueryShowBookIsReturn()
-            cursor.execute(query)
-            records = cursor.fetchall()
+      
+        query = return_repo.QueryShowBookIsReturn()
+        cursor.execute(query)
+        records = cursor.fetchall()
 
-            row_headers = [x[0] for x in cursor.description]
-            json_data = []
+        row_headers = [x[0] for x in cursor.description]
+        json_data = []
 
-            for data in records:
-                json_data.append(dict(zip(row_headers,data)))
+        for data in records:
+            json_data.append(dict(zip(row_headers,data)))
             
-            cursor.close()
-            conn.close()
-            return make_response(jsonify(json_data),200)
+        cursor.close()
+        conn.close()
+        return make_response(jsonify(json_data),200)
         
     except Exception as e:
         print("error",str(e))

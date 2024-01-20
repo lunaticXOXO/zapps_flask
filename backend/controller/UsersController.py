@@ -62,7 +62,8 @@ def Login():
             session['usertype'] = userType
             hasil = {"status" : "success",
                     "usertype" : userType,
-                    "username" : username
+                    "username" : username,
+                    "id" : iduser
                     }
         else:
             hasil = {"status" : "failed"}
@@ -117,28 +118,48 @@ def ShowUserBySuperUser():
         print("error",str(e))
         return {"status" : "failed"}
 
-def ShowUserByStaff():
+def ShowUserByStaff(iduser):
     conn = database.connector()
     cursor = conn.cursor()
 
     try:
-        if session['loggedin'] == True and (session['usertype'] == 2):
-            iduser = session['id']
-            iduser = str(iduser)
-            query = user_repo.QueryShowDetailStaff(iduser)
-           
-            cursor.execute(query)
-            records = cursor.fetchall()
+        query = user_repo.QueryShowDetailStaff(iduser)   
+        cursor.execute(query)
+        records = cursor.fetchall()
 
-            row_headers = [x[0] for x in cursor.description]
-            json_data = []
+        row_headers = [x[0] for x in cursor.description]
+        json_data = []
 
-            for data in records:
-                json_data.append(dict(zip(row_headers,data)))
+        for data in records:
+            json_data.append(dict(zip(row_headers,data)))
             
-            cursor.close()
-            conn.close()
-            return make_response(jsonify(json_data),200)
+        cursor.close()
+        conn.close()
+        return make_response(jsonify(json_data),200)
+
+    except Exception as e:
+        print("error",str(e))
+        return {"status" : "failed"}
+
+
+def ShowBasicInfoStaff(id):
+    conn = database.connector()
+    cursor = conn.cursor()
+
+    try:
+        query = user_repo.QueryBasicInfoStaff(id)
+        cursor.execute(query)
+        records = cursor.fetchall()
+
+        row_headers = [x[0] for x in cursor.description]
+        json_data = []
+
+        for data in records:
+            json_data.append(dict(zip(row_headers,data)))
+            
+        cursor.close()
+        conn.close()
+        return make_response(jsonify(json_data),200)
 
     except Exception as e:
         print("error",str(e))
@@ -206,6 +227,30 @@ def UpdateDetailInformation():
         print("error",str(e))
     
     return output
+
+
+def ShowAllMember():
+    conn = database.connector()
+    cursor = conn.cursor()
+
+    try:
+        query = user_repo.QueryShowMembers()
+        cursor.execute(query)
+        records = cursor.fetchall()
+
+        row_headers = [x[0] for x in cursor.description]
+        json_data = []
+
+        for data in records:
+            json_data.append(dict(zip(row_headers,data)))
+            
+        cursor.close()
+        conn.close()
+        return make_response(jsonify(json_data),200)
+
+    except Exception as e:
+        print("error",str(e))
+        return {"status" : "failed"}
 
 def Logout():
     try:

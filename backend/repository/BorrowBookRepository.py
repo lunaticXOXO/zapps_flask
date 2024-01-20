@@ -31,14 +31,20 @@ def QueryShowBukuReturn():
     return query
 
 
-def QueryShowDetailPeminjaman():
-    query = """SELECT book_borrow.idborrow,book_borrow.nama_peminjam, 
-        book_borrow.tanggal_pinjam, book_borrow.deadline_pinjam,
-        book_borrow.quantity,book_stock.bookname
-        FROM book_borrow 
-        JOIN book_stock ON book_stock.isbn = book_borrow.nisn_book
-        JOIN users ON users.id = book_borrow.userid"""
+def QueryShowDetailPeminjamanUsers(idborrow):
+    query = "SELECT * FROM book_borrow JOIN users ON users.id = book_borrow.userid JOIN book_stock ON book_stock.isbn = book_borrow.nisn_book WHERE book_borrow.idborrow = '"+idborrow+"'"
     return query
+
+
+def QueryShowDetailPeminjamanReturn(idborrow):
+    query = "SELECT * FROM book_borrow JOIN book_return ON book_return.borrow = book_borrow.idborrow WHERE book_borrow.idborrow = '"+idborrow+"'"
+    return query
+
+def QueryShowPeminjamanById(idborrow):
+    query = "SELECT * FROM book_borrow WHERE idborrow = '"+idborrow+"'"
+    return query
+
+
 
 
 def QueryGetDeadline(idborrow):
@@ -47,7 +53,7 @@ def QueryGetDeadline(idborrow):
 
 
 def QueryShowBorrowBookMember(userid):
-    query = "SELECT book_borrow.idborrow,book_borrow.nama_peminjam,book_borrow.tanggal_pinjam,book_borrow.deadline_pinjam,book_borrow.quantity,book_stock.isbn,book_stock.bookname FROM book_borrow JOIN book_stock ON book_stock.isbn = book_borrow.nisn_book WHERE book_borrow.userid = '"+userid+"' AND book_borrow.isBorrow = 1"
+    query = "SELECT book_borrow.idborrow,book_borrow.nama_peminjam,book_borrow.tanggal_pinjam,book_borrow.deadline_pinjam,book_borrow.quantity,book_stock.isbn,book_stock.bookname,book_borrow.userid FROM book_borrow JOIN book_stock ON book_stock.isbn = book_borrow.nisn_book WHERE book_borrow.userid = '"+userid+"' AND book_borrow.isBorrow = 1"
     return query
 
 

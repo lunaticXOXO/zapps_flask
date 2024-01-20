@@ -30,6 +30,16 @@ WHERE users.usertype = 1 OR users.usertype = 2"""
     return query
 
 def QueryShowDetailStaff(userid):
-    query = "SELECT users.username,detail_users.fullname,detail_users.adress,detail_users.city,detail_users.telephone FROM users JOIN detail_users ON detail_users.usersid = users.id WHERE users.id = '"+userid+"' AND users.usertype = 2"
-
+    query = "SELECT * FROM detail_users WHERE detail_users.usersid = '"+userid+"'"
     return query
+
+
+def QueryBasicInfoStaff(id):
+    query = "SELECT username,email FROM users WHERE id = '"+id+"'"
+    return query
+
+
+def QueryShowMembers():
+    query = "SELECT id,username FROM users WHERE usertype = 3"
+    return query
+
