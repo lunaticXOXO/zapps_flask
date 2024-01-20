@@ -15,24 +15,17 @@
         </v-card>
         
         <br>
-       
-  
           <v-data-table 
               :headers = "column"
               :items = "return_books">
-             
             
               <template v-slot:[`item.aksi`]="{ item }">
-               
-  
                 <div>
                   <router-link :to="{name : 'ListBooksDetailStaff',params:{id : `${item.idreturn}`}}">
                   <v-btn class="mx-1" x-small color="blue" @click="selectPengembalian(item)">
                       <v-icon small dark>mdi-check</v-icon>
                   </v-btn>
                   </router-link>
-            
-  
                 </div>
               </template>
           </v-data-table>
@@ -157,14 +150,14 @@
           lazy-validation>
   
           <v-text-field
-          v-model="isbn"
-          label="ISBN"
+          v-model="idviolation"
+          label="ID Violation"
           required
           ></v-text-field>
   
           <v-text-field
-          v-model="bookname"
-          label="Book Name"
+          v-model="nama"
+          label="Nama"
           ></v-text-field>
   
           <v-text-field

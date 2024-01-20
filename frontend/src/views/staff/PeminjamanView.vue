@@ -82,6 +82,12 @@
                 </div>
   
                 <div v-else>
+                  <router-link :to="{name : 'ReturnBookByIdPinjam',params:{id : `${item.idborrow}`}}">
+                  <v-btn class="mx-1" x-small color="green" @click="selectBooks(item)">
+                      <v-icon small dark>mdi-check</v-icon>
+                  </v-btn>
+                  </router-link>
+
                   <router-link :to="{name : 'DetailPeminjamanStaff',params:{id : `${item.idborrow}`}}">
                   <v-btn class="mx-1" x-small color="blue" @click="selectBooks(item)">
                       <v-icon small dark>mdi-check</v-icon>
@@ -339,7 +345,7 @@
         this.dateDialog = false;
     },
 
-        validate () {
+      validate () {
           if(this.$refs.form.validate()){
             this.CreatePeminjaman()
           

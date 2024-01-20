@@ -93,6 +93,11 @@ class main():
     def create_return():
         return CreateReturn()
 
+
+    @app.route('/api/create_return_peminjam/<idborrow>',methods = ['POST'])
+    def create_return_peminjam(idborrow):
+        return CreateReturnByPeminjam(idborrow)
+
     @app.route('/api/list_returnbook',methods = ['GET'])
     def listreturn_book():
         return ShowBookIsReturn()
@@ -101,6 +106,10 @@ class main():
     @app.route('/api/create_violation',methods = ['POST'])
     def create_violation():
         return CreateViolationBook()
+    
+    @app.route('/api/violation_type',methods = ['GET'])
+    def show_violation_type():
+        return ShowViolationType()
 
     #Users
     @app.route('/api/register',methods = ['POST'])

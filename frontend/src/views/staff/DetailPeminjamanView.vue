@@ -123,7 +123,7 @@
              console.log("empty books")
             }else{
               this.peminjaman = res.data
-              console.log(res,this.books)
+              console.log(res,this.peminjaman)
             }
           }
           catch(error){

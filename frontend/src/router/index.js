@@ -14,6 +14,7 @@ import ProfileStaff from '../views/staff/ProfileStaff.vue'
 import PeminjamanView from '../views/staff/PeminjamanView.vue'
 import DetailPeminjamanView from '../views/staff/DetailPeminjamanView.vue'
 import ReturnBooksView from '../views/staff/ReturnBooksView.vue'
+import PengembalianByIdBorrow from '../views/staff/PengembalianByIdBorrow.vue'
 
 Vue.use(VueRouter)
 
@@ -126,6 +127,16 @@ const routes = [
     title : "Pengembalian Buku"
   }
 
+
+ },
+
+ {
+    path : '/pengembalian/:id',
+    name : 'ReturnBookByIdPinjam',
+    component : PengembalianByIdBorrow,
+    meta : {
+      title : "Pengembalian Buku by ID Pinjam"
+    }
 
  }
 
