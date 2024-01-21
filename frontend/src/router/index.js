@@ -15,6 +15,8 @@ import PeminjamanView from '../views/staff/PeminjamanView.vue'
 import DetailPeminjamanView from '../views/staff/DetailPeminjamanView.vue'
 import ReturnBooksView from '../views/staff/ReturnBooksView.vue'
 import PengembalianByIdBorrow from '../views/staff/PengembalianByIdBorrow.vue'
+import PelanggaranByPeminjam from '../views/staff/PelanggaranByPeminjam.vue'
+
 
 Vue.use(VueRouter)
 
@@ -138,6 +140,15 @@ const routes = [
       title : "Pengembalian Buku by ID Pinjam"
     }
 
+ },
+
+ {
+  path : '/violationPeminjam/:id',
+  name : 'PelanggaranByPeminjam',
+  component : PelanggaranByPeminjam,
+  meta : {
+    title : "Denda untuk peminjam"
+  }
  }
 
 

@@ -72,7 +72,7 @@ export default {
                     active: false,
                     items: [
                         {title : 'Daftar Buku',icon : 'mdi-playlist-check',route : '/listBukuStaff'},
-                        {title : 'Tambah Buku',icon : 'mdi-plus',route : '/addBukuStaff'}
+                      
                     ],  
                     title: 'Buku',  
                 },
@@ -81,9 +81,8 @@ export default {
                    action: 'mdi-book',
                     active: false,
                     items: [
-                       {title : 'Daftar Buku Pinjam',icon : 'mdi-playlist-check',route : '/listBorrowBookStaff'},
-                       {title : 'Detail Peminjaman',icon : 'mdi-plus',route : '/detailBorrowBookStaff'},
-                       {title : 'Pengaujuan Peminjaman',icon : 'mdi-plus',route : '/createPeminjaman'}
+                       {title : 'Daftar Buku Pinjam',icon : 'mdi-playlist-check',route : '/peminjamanStaff'},
+                      
                     ],
                     title: 'Peminjaman Buku',  
                 },
@@ -93,9 +92,8 @@ export default {
                     action: 'mdi-account-star',
                     active: false,
                     items: [
-                        {title : 'Daftar Pengembalian',icon : 'mdi-playlist-check',route : '/listPengembalian'},
-                        { title: 'Tambah Pengembalian', icon: 'mdi-account-plus', route: '/createPengembalian'},
-                        { title: 'Buku hilang / rusak', icon: 'mdi-account-plus', route: '/createViolation'},
+                        {title : 'Daftar Pengembalian',icon : 'mdi-playlist-check',route : '/returnBooksView'},
+                        
 
                     ],
                     title: 'Pengembalian Buku',
@@ -105,11 +103,12 @@ export default {
                     action: 'mdi-wrench',
                     active: false,
                     items: [
-                        { title: 'Daftar Admin & staff', icon: 'mdi-sort-variant', route: '/liststaff'},
+                        { title: 'Profile staff', icon: 'mdi-sort-variant', route: '/profileStaff'},
                       
                     ],
-                    title: 'Users',
+                    title: 'User staff',
                 },
+             
             ],
         }
     },

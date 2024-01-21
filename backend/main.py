@@ -110,6 +110,18 @@ class main():
     @app.route('/api/violation_type',methods = ['GET'])
     def show_violation_type():
         return ShowViolationType()
+    
+    @app.route('/api/create_violation_peminjam/<idborrow>',methods = ['POST'])
+    def create_violation_peminjam(idborrow):
+        return CreateViolationByPeminjam(idborrow)
+    
+    @app.route('/api/damage_level',methods=['GET'])
+    def show_damage_type():
+        return ShowDamageLevel()
+
+    @app.route('/api/violation_peminjam/<idborrow>',methods = ['GET'])
+    def show_violation_peminjam(idborrow):
+        return ShowViolationByPeminjam(idborrow)
 
     #Users
     @app.route('/api/register',methods = ['POST'])

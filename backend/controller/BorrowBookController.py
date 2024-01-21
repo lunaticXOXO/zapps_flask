@@ -218,8 +218,6 @@ def ShowBorrowooksByMember(userid):
     cursor = conn.cursor()
 
     try:
-            # userid = session['id']
-            # userid = str(userid)
             query = borrow_repo.QueryShowBorrowBookMember(userid)
           
             values = (userid)
@@ -265,3 +263,5 @@ def ShowReturnBooksMember(userid):
     except Exception as e:
         print("error",str(e))
         return {"status" : "failed"}
+
+

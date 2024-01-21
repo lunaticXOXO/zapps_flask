@@ -9,7 +9,7 @@
                 class="px-5 py-3"
                 max-height ="200">
             <v-card-title class="text-h5">
-             Daftar Buku Dipinjam
+             Daftar Buku Selesai Proses Peminjaman
             </v-card-title>
       </v-card>
 

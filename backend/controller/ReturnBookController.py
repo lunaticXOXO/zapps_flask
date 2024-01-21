@@ -156,27 +156,41 @@ def CreateReturnByPeminjam(idborrow):
             
         qty_borrowNow = 0
         query_updatePinjam = borrow_repo.QueryUpdateStatusPeminjaman(idborrow)
+
         qty_borrowNow = quantity_borrow - quantity_return
-
-
-        if qty_borrowNow <= 0:
-            values_update = (qty_borrowNow,0)
-        else:
-            values_update = (qty_borrowNow,1)
-
-        cursor.execute(query_updatePinjam,values_update)
-
         dateline = GetDeadlineBooks(idborrow)
         range_date = (tanggal - dateline).days
 
         output = None
-        if tanggal < dateline:
+        #Jika tepat waktu
+        if tanggal <= dateline:
+            if qty_borrowNow <= 0:
+                values_update = (qty_borrowNow,0,0)
+            else:
+                values_update = (qty_borrowNow,1,0)
+            cursor.execute(query_updatePinjam,values_update)
             cek = False
+
+        #Jika telat
         else:
+            if qty_borrowNow <= 0:
+                values_update = (qty_borrowNow,0,2)
+            else:
+                values_update = (qty_borrowNow,1,2)
+            cursor.execute(query_updatePinjam,values_update)
+
             query_violation = violation_repo.QueryCreateViolation()
-            biaya = range_date * os.getenv('DENDA_HARI')
-            values_violation = (nama_peminjam,biaya,2,isbn,userid,idreturn)
+            denda_hari = os.getenv('DENDA_HARI')
+            denda_hari = int(denda_hari)
+            biaya = range_date * denda_hari
+
+            print("denda hari :",denda_hari)
+            print("biaya : ",biaya)
+            print("range_date : ",range_date)
+
+            values_violation = (nama_peminjam,biaya,quantity_return,2,idborrow)
             cursor.execute(query_violation,values_violation)
+
             cek = True
             print("test")
         conn.commit()

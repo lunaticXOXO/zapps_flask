@@ -68,8 +68,12 @@ def QueryShowQuantityBorrow(idborrow):
 
 
 def QueryUpdateStatusPeminjaman(idborrow):
-    query = "UPDATE book_borrow SET quantity = %s, isBorrow = %s WHERE idborrow = '"+idborrow+"'"
+    query = "UPDATE book_borrow SET quantity = %s, isBorrow = %s,violation_type = %s WHERE idborrow = '"+idborrow+"'"
     return query
+
+
+def QueryUpdatePeminjamanHilang():
+    pass
 
 
 def QueryGetDateline(idborrow):

@@ -40,7 +40,7 @@
            
         ],
         books : [],
-        editedIndex: -1,
+      
        
        
       }

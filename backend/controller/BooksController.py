@@ -194,3 +194,21 @@ def BoosByISBN(isbn):
     except Exception as e:
         print("error",str(e))
         return {"status" : "failed"}
+
+
+
+def GetPriceBooks(isbn):
+    conn = database.connector()
+    cursor = conn.cursor()
+
+    try:
+        query = books_repo.QueryGetPriceBooks(isbn)
+        cursor.execute(query)
+        data = cursor.fetchone()
+
+        price = data[0]
+
+    except Exception as e:
+        print("error",str(e))
+        
+    return price

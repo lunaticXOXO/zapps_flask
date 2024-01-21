@@ -45,7 +45,8 @@
 
         </div>
       
-      <v-card
+      <div class="d-flex">
+        <v-card
         class="mt-10 text-center mx-10"
         width="800">
         <br>
@@ -58,8 +59,6 @@
                Pengembalian Buku Peminjaman {{this.$route.params.id}}
               </v-card-title>
       </v-card>
-  
-  
       <v-form  class="pa-6"
           ref="form"
           v-model="valid"
@@ -102,6 +101,71 @@
         {{snackbar.message}}
       </v-snackbar>
     </v-card>
+
+    <v-card
+        class="mt-10 text-center mx-10"
+        width="800">
+        <br>
+  
+        <v-card  color="#2596be"
+                  dark
+                  class="px-5 py-3"
+                  max-height ="200">
+              <v-card-title class="text-h5">
+               Pengajuan Kehilangan / Kerusakan Peminjaman {{this.$route.params.id}}
+              </v-card-title>
+      </v-card>
+      <v-form  class="pa-6"
+          ref="form2"
+          v-model="valid2"
+          @submit.prevent="submitHandler"
+          lazy-validation>
+  
+          <v-autocomplete
+            class="mx-10"
+            v-model="violation_type"
+            :items="violations"
+            item-text="description"
+            item-value="id"
+            label="Jenis Pelanggaran">
+        </v-autocomplete>
+
+        <v-autocomplete
+            class="mx-10"
+            v-model="damaged_level"
+            :items="damages"
+            item-text="description"
+            item-value="id"
+            label="Tingkat Kerusakan">
+        </v-autocomplete>
+  
+          <v-btn
+              :disabled="!valid"
+              color="success"
+              class="mr-4"
+              type="submit"
+              @click="validate2()">
+                  Submit
+          </v-btn>
+      
+          <v-btn
+              color="error"
+              class="mr-4"
+              @click="reset">
+                Reset
+          </v-btn>
+  
+      </v-form>
+      <v-snackbar :color="snackbar.color" v-model="snackbar.show" top>
+        {{snackbar.message}}
+      </v-snackbar>
+    </v-card>
+
+      </div>
+
+    
+
+
   </v-app>
   
   </template>
@@ -128,10 +192,13 @@
   
           peminjaman : [],
           return_books : [],
+          violations : [],
+          damages : [],
   
             idreturn: '',
             quantity: '',
-           
+           violation_type : undefined,
+           damaged_level : undefined,
         
          
   
@@ -146,7 +213,9 @@
   
       mounted(){
           this.fetchPeminjamanById(),
-          this.fetchReturnBooks()
+          this.fetchReturnBooks(),
+          this.fetchViolationType(),
+          this.fetchDamageLevel()
          
       },
   
@@ -155,6 +224,13 @@
         validate () {
           if(this.$refs.form.validate()){
             this.CreateReturnByPeminjam()
+          
+          }
+        },
+
+        validate2 () {
+          if(this.$refs.form2.validate()){
+            this.CreateViolationByPeminjam()
           
           }
         },
@@ -194,6 +270,42 @@
             console.log(error)
           }
         },
+
+        async fetchViolationType(){
+          try{
+            const axios = require('axios');
+            const res = await axios.get('/api/damage_level');
+            if (res.data == null){
+              
+              console.log("empty")
+            }else{
+              this.damages = res.data
+              console.log(res,this.damages)
+            }
+          }
+          catch(error){
+            alert("Error")
+            console.log(error)
+          }
+        },
+
+        async fetchDamageLevel(){
+          try{
+            const axios = require('axios');
+            const res = await axios.get('/api/violation_type');
+            if (res.data == null){
+              
+              console.log("empty")
+            }else{
+              this.violations = res.data
+              console.log(res,this.violations)
+            }
+          }
+          catch(error){
+            alert("Error")
+            console.log(error)
+          }
+        },
          
        
   
@@ -203,7 +315,6 @@
             const response = await axios.post('/api/create_return_peminjam/' + this.$route.params.id,
               { idreturn: this.idreturn,
                 quantity: this.quantity,
-               
                
               }
             );
@@ -215,8 +326,13 @@
                 color : 'green',
                 show : true
             }
-  
-            location.replace('/pengembalian/' + this.$route.params.id)
+            if(response.data.denda == "False"){
+              location.replace('/pengembalian/' + this.$route.params.id)
+
+            }else if(response.data.denda == "True"){
+              location.replace('/violationPeminjam/' + this.$route.params.id)
+            }
+           
           }
             else if(response.data.status == "failed"){
                 this.snackbar = {
@@ -237,13 +353,47 @@
           }
         },
   
-        
+        async CreateViolationByPeminjam(){
+
+          try{
+            const axios = require('axios');
+            const response = await axios.post('/api/create_violation_peminjam/' + this.$route.params.id,
+              { violation_type: this.violation_type,
+                damaged_level: this.damaged_level,
+               
+              }
+            );
+            console.log(response,this.data)
+           if(response.data.status == "success"){
   
-      },
+               this.snackbar = {
+                message : "Create return success",
+                color : 'green',
+                show : true
+            }
+            location.replace('/violationPeminjam/' + this.$route.params.id)
+          }
+            else if(response.data.status == "failed"){
+                this.snackbar = {
+                message : "Create return failed",
+                color : 'red',
+                show : true
+            }}
+            
+          }
+          catch(error){
+            alert("Insert books error")
+            console.log(error)
+            this.snackbar = {
+                message : "Insert books error",
+                color : 'red',
+                show : true}
+            
+          }
+
+        }
   
-  
-        
-  
+      },  
       
     }
   
