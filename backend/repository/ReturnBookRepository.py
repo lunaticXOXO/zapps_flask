@@ -13,3 +13,9 @@ JOIN book_stock ON book_stock.isbn = book_return.nisn_book
 JOIN users ON users.id = book_return.userid
 WHERE book_return.isReturn = 1"""
     return query
+
+
+
+def QueryDetailReturnByID(idreturn):
+    query = "SELECT * FROM book_return JOIN book_borrow ON book_borrow.idborrow = book_return.borrow JOIN book_stock ON book_stock.isbn = book_borrow.nisn_book WHERE book_return.idreturn = '"+idreturn+"'"
+    return query

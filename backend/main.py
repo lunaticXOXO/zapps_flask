@@ -102,6 +102,10 @@ class main():
     def listreturn_book():
         return ShowBookIsReturn()
     
+    @app.route('/api/detail_returnbook/<idreturn>',methods = ['GET'])
+    def detail_returnBooks(idreturn):
+        return ShowDetailReturnBooks(idreturn)
+    
     #Violation
     @app.route('/api/create_violation',methods = ['POST'])
     def create_violation():

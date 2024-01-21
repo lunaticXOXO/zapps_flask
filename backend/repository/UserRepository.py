@@ -43,3 +43,13 @@ def QueryShowMembers():
     query = "SELECT id,username FROM users WHERE usertype = 3"
     return query
 
+
+def QueryTransactionLogin():
+    query = "INSERT INTO loggedusers(loggedin,userid)VALUES(%s,%s)"
+    return query
+
+
+def QueryTransactionLogout():
+    query = "INSERT INTO loggedusers(loggedout,userid)VALUES(%s,%s)"
+    return query
+

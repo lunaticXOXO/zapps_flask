@@ -16,7 +16,7 @@
       
         <v-data-table 
             :headers = "column"
-            :items = "books">
+            :items = "detail_returns">
            
         </v-data-table>
     </v-card>
@@ -36,7 +36,7 @@
       <br>
           <v-data-table 
             :headers = "column2"
-            :items = "detail_books">
+            :items = "detail_returns">
         </v-data-table>
 
       </v-card>
@@ -53,7 +53,7 @@
         <br>
         <v-data-table 
             :headers = "column3"
-            :items = "detail_books2">
+            :items = "detail_returns">
         </v-data-table>
 
       </v-card>
@@ -83,7 +83,6 @@
           {text : 'Nama Peminjam',          value : 'nama_peminjam'},
           {text : 'Tanggal Peminjaman',     value : 'tanggal_pinjam'},
           {text : 'Batas Peminjaman',        value : 'deadline_pinjam'},
-          {text : 'Jumlah Dipinjam',        value : 'quantity'},
           {text : 'IsBorrow',               value : 'isBorrow'}
         ],
 
@@ -91,38 +90,35 @@
             {text : 'ID Pengembalian', value : 'idreturn'},
             {text : 'Nama Pengembali', value : 'nama_pengembali'},
             {text : 'Tanggal Kembali', value : 'tanggal_kembali'},
-            {text : 'Jumlah'         , value : 'quantity'},
             {text : 'IsReturn'       , value : 'isReturn'},
             {text : 'ID Peminjaman'  ,value : 'borrow'}
         ],
 
         
-        books : [],
-        detail_books : [],
-        detail_books2 : [],
-        editedIndex: -1,
+      
+        detail_returns : [],
+       
        
        
       }
     },
 
     mounted(){
-        this.fetchBooksById(),
-        this.fetchDetailBooksPinjam(),
-        this.fetchDetailBooksReturn()
+        this.fetchReturnBooksById()
+       
     },
 
     methods: {
       
-      async fetchBooksById(){
+      async fetchReturnBooksById(){
         try{
           const axios = require('axios');
-          const res = await axios.get('/api/showbooks_byid/' + this.$route.params.id);
+          const res = await axios.get('/api/detail_returnbook/' + this.$route.params.id);
           if (res.data == null){
            console.log("empty book")
           }else{
-            this.books = res.data
-            console.log(res,this.books)
+            this.detail_returns = res.data
+            console.log(res,this.detail_returns)
           }
         }
         catch(error){
@@ -130,42 +126,7 @@
           console.log(error)
         }
       },
-
-      async fetchDetailBooksPinjam(){
-        try{
-          const axios = require('axios');
-          const res = await axios.get('/api/details_book/' + this.$route.params.id);
-          if (res.data == null){
-           console.log("empty book")
-          }else{
-            this.detail_books = res.data
-            console.log(res,this.detail_books)
-          }
-        }
-        catch(error){
-          alert("Error")
-          console.log(error)
-        }
-      },
-
-      async fetchDetailBooksReturn(){
-        try{
-          const axios = require('axios');
-          const res = await axios.get('/api/details_book_return/' + this.$route.params.id);
-          if (res.data == null){
-           console.log("empty book")
-          }else{
-            this.detail_books2 = res.data
-            console.log(res,this.detail_books2)
-          }
-        }
-        catch(error){
-          alert("Error")
-          console.log(error)
-        }
-      },
-      
-      
+ 
       
     }
   }

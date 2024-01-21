@@ -2,6 +2,7 @@ import database.database as database
 from flask import Flask,request,session,make_response,jsonify
 import repository.UserRepository as user_repo
 import hashlib
+import datetime
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -65,8 +66,7 @@ def Login():
                     "username" : username,
                     "id" : iduser
                     }
-        else:
-            hasil = {"status" : "failed"}
+       
     except Exception as e:
         print("error",str(e))
         hasil = {"status" : "error"}
@@ -259,6 +259,9 @@ def Logout():
         session.pop('username', None)
 
         session.clear()        
+
+
+
 
         hasil = {"status" : "success"}
     except:
