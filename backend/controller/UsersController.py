@@ -2,7 +2,11 @@ import database.database as database
 from flask import Flask,request,session,make_response,jsonify
 import repository.UserRepository as user_repo
 import hashlib
-import datetime
+from datetime import datetime
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -45,7 +49,7 @@ def Login():
 
         passwords = hashlib.md5(passwords.encode('utf8')).hexdigest()
         query = user_repo.QuerySelectUser(username,passwords)
-        print("query : ",query)
+       
 
         cursor.execute(query)
         user = cursor.fetchall()
@@ -54,30 +58,31 @@ def Login():
         for data in user:
             iduser = data[0]
             userType = int(data[4])
-            print("iduser : ",iduser)
+           
 
         if user:
             session['loggedin'] = True
             session['id'] = iduser
             session['username'] = username
             session['usertype'] = userType
+
             hasil = {"status" : "success",
                     "usertype" : userType,
                     "username" : username,
                     "id" : iduser
                     }
-       
+        query_logged = user_repo.QueryTransactionLogin()
+        now = datetime.now()
+        values_logged = (now,iduser)
+        cursor.execute(query_logged,values_logged)
+        conn.commit()
+
+        cursor.close()
+        conn.close()
+
     except Exception as e:
         print("error",str(e))
         hasil = {"status" : "error"}
-
-    cursor.close()
-    conn.close()
-
-    logged = GetUserLogged()
-    loggedType = GetUsertypeLogged()
-
-    print("logged :", logged, "type : ",loggedType)
 
     return hasil
 
@@ -253,16 +258,14 @@ def ShowAllMember():
         return {"status" : "failed"}
 
 def Logout():
+    
     try:
+
         session.pop('loggedin', None)
         session.pop('id', None)
         session.pop('username', None)
 
         session.clear()        
-
-
-
-
         hasil = {"status" : "success"}
     except:
         hasil = {"status" : "failed"}

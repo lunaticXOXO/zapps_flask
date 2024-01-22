@@ -45,11 +45,11 @@ def QueryShowMembers():
 
 
 def QueryTransactionLogin():
-    query = "INSERT INTO loggedusers(loggedin,userid)VALUES(%s,%s)"
+    query = "INSERT INTO loggedusers(loggedins,userid)VALUES(%s,%s)"
     return query
 
 
 def QueryTransactionLogout():
-    query = "INSERT INTO loggedusers(loggedout,userid)VALUES(%s,%s)"
+    query = "UPDATE loggedusers SET loggedout = %s WHERE userid = %s"
     return query
 

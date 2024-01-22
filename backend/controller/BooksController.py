@@ -149,6 +149,29 @@ def DetailBooks(isbn):
         return {"status" : "failed"}
     
 
+def DetailBooksComplete(isbn):
+    conn = database.connector()
+    cursor = conn.cursor()
+
+    try:
+        query = books_repo.QueryDetailBooks2(isbn)
+        cursor.execute(query)
+        records = cursor.fetchall()
+
+        row_headers = [x[0] for x in cursor.description]
+        json_data = []
+
+        for data in records:
+            json_data.append(dict(zip(row_headers,data)))
+            
+        cursor.close()
+        conn.close()
+        return make_response(jsonify(json_data),200)
+        
+    except Exception as e:
+        print("error",str(e))
+        return {"status" : "failed"}
+
 def DetailBooksReturn(isbn):
     conn = database.connector()
     cursor = conn.cursor()

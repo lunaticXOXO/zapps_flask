@@ -16,6 +16,7 @@ import DetailPeminjamanView from '../views/staff/DetailPeminjamanView.vue'
 import ReturnBooksView from '../views/staff/ReturnBooksView.vue'
 import PengembalianByIdBorrow from '../views/staff/PengembalianByIdBorrow.vue'
 import PelanggaranByPeminjam from '../views/staff/PelanggaranByPeminjam.vue'
+import ListDetailBookReturn from '../views/staff/ListDetailBookReturn.vue'
 
 
 Vue.use(VueRouter)
@@ -130,6 +131,15 @@ const routes = [
   }
 
 
+ },
+
+ {
+  path : '/detailReturn/:id',
+  name : 'DetailReturnBook',
+  component :  ListDetailBookReturn,
+  meta : {
+    title : "Detail Pengembalian Buku"
+  }
  },
 
  {

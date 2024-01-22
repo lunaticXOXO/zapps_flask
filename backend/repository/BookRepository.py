@@ -44,3 +44,8 @@ def QueryDetailBooksReturn(isbn):
 def QueryGetBooksById(isbn):
   query = "SELECT * FROM book_Stock WHERE book_stock.isbn = '"+isbn+"'"
   return query
+
+
+def QueryDetailBooks2(isbn):
+  query = "SELECT * FROM book_stock JOIN book_borrow ON book_borrow.nisn_book =book_stock.isbn JOIN book_return ON book_return.borrow = book_borrow.idborrow WHERE book_stock.isbn = '"+isbn+"'"
+  return query

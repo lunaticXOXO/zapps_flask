@@ -43,10 +43,9 @@ def CreatePeminjaman():
                 nisn_book,
                 userid)
         
-        print("values : ",values)
         cursor.execute(query,values)
-    
         query_getqty = book_repo.QueryGetQuantityBooks(nisn_book)
+        
         cursor.execute(query_getqty)
         selected = cursor.fetchone()
         quantity_books = selected[0]

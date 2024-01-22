@@ -113,7 +113,7 @@
       async fetchReturnBooksById(){
         try{
           const axios = require('axios');
-          const res = await axios.get('/api/detail_returnbook/' + this.$route.params.id);
+          const res = await axios.get('/api/detail_books_complete/' + this.$route.params.id);
           if (res.data == null){
            console.log("empty book")
           }else{

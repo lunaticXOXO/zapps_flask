@@ -21,7 +21,7 @@
             
               <template v-slot:[`item.aksi`]="{ item }">
                 <div>
-                  <router-link :to="{name : 'ListBooksDetailStaff',params:{id : `${item.idreturn}`}}">
+                  <router-link :to="{name : 'DetailReturnBook',params:{id : `${item.idreturn}`}}">
                   <v-btn class="mx-1" x-small color="blue" @click="selectPengembalian(item)">
                       <v-icon small dark>mdi-check</v-icon>
                   </v-btn>

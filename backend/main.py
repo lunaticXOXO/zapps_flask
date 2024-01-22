@@ -47,6 +47,11 @@ class main():
     @app.route('/api/showbooks_byid/<isbn>',methods= ['GET'])
     def get_books_id(isbn):
         return BoosByISBN(isbn)
+
+    
+    @app.route('/api/detail_books_complete/<isbn>',methods = ['GET'])
+    def detail_books_complete(isbn):
+        return DetailBooksComplete(isbn)
     
 
     #Borrow Books

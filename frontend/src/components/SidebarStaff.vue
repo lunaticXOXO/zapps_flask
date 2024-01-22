@@ -116,8 +116,9 @@ export default {
         logout() {
             this.route = "/login"
             location.replace("/login")
-            this.loginService.removeUserType()
             axios.post('/api/logout')
+            this.loginService.removeUserType()
+           
         }
     },
 }
